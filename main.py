@@ -1,5 +1,13 @@
 import customtkinter
 from CTkMessagebox import CTkMessagebox
+from pymongo.mongo_client import MongoClient
+
+url = "mongodb+srv://mongodb:mongodb@tally.i6wfrlt.mongodb.net/?retryWrites=true&w=majority"
+
+client = MongoClient(url)
+
+db = client['Punekar']
+collec = db['Tally']
 
 
 class MyFrame(customtkinter.CTkFrame):
@@ -10,9 +18,9 @@ class MyFrame(customtkinter.CTkFrame):
         self.label_heading = customtkinter.CTkLabel(self, text="Enter Details", font=('Monospace', 30), width=10, justify='center')
         self.label_heading.place(relx=0.5, rely=0.1, anchor='n')
 
-        self.label_name = customtkinter.CTkLabel(self, text="Full Name:")
+        self.label_name = customtkinter.CTkLabel(self, text="Resort Name:")
         self.label_name.place(relx=0.15, rely=.2, anchor='nw')
-        self.entry_name = customtkinter.CTkEntry(self, placeholder_text="Full Name", width=200)
+        self.entry_name = customtkinter.CTkEntry(self, placeholder_text="Resort Name", width=200)
         self.entry_name.place(relx=.15, rely=.25, anchor='nw')
 
         self.label_amount = customtkinter.CTkLabel(self, text="Amount (Rs.)")
@@ -32,12 +40,26 @@ class MyFrame(customtkinter.CTkFrame):
         self.button_logs.place(relx=0.7, rely=0.90, anchor='s')
 
     def save_button(self):
+        dic = {
+            "Department": "",
+            "Resort Name": self.entry_name.get(),
+            "Person Name": "",
+            "Amount": self.entry_amount.get(),
+            "Reason": self.textbox_reason.get(1.0, "end-1c"),
+            "Payment_type": "",
+            "Approved": 0,
+            "Paid": 0
+        }
         if self.entry_name.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
-            CTkMessagebox(title="Info", message="Added to Database Successfully")
-            self.entry_name.delete(0, 'end')
-            self.entry_amount.delete(0, 'end')
-            self.textbox_reason.delete('1.0', 'end')
-
+            try:
+                int(self.entry_amount.get())
+                collec.insert_one(dic)
+                CTkMessagebox(title="Info", message="Added to Database Successfully")
+                self.entry_name.delete(0, 'end')
+                self.entry_amount.delete(0, 'end')
+                self.textbox_reason.delete('1.0', 'end')
+            except Exception:
+                CTkMessagebox(title="Error", message="Please Enter all values properly or try again later")
 
 
 class App(customtkinter.CTk):
