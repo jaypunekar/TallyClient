@@ -1,6 +1,8 @@
 import customtkinter
 from CTkMessagebox import CTkMessagebox
 from pymongo.mongo_client import MongoClient
+from tkinter import ttk
+from datetime import datetime
 
 url = "mongodb+srv://mongodb:mongodb@tally.i6wfrlt.mongodb.net/?retryWrites=true&w=majority"
 
@@ -9,6 +11,71 @@ client = MongoClient(url)
 db = client['Punekar']
 collec = db['Tally']
 
+class LogFrame(customtkinter.CTkFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.my_tree = ttk.Treeview(self)
+        self.my_tree["columns"] = ("Department", "Date_time", "Resort Name", "Person Name", "Amount", "Payment_type", "Approved", "Paid")
+
+        self.my_tree.column("#0", anchor='w', width=70)
+        self.my_tree.column("Department", anchor='w', width=70)
+        self.my_tree.column("Date_time", anchor='center', width=120)
+        self.my_tree.column("Resort Name", anchor='center', width=200)
+        self.my_tree.column("Person Name", anchor='w', width=200)
+        self.my_tree.column("Amount", anchor='w', width=100)
+        self.my_tree.column("Payment_type", anchor='w', width=100)
+        self.my_tree.column("Approved", anchor='w', width=60)
+        self.my_tree.column("Paid", anchor='w', width=60)
+
+        self.my_tree.heading("#0", text="Label", anchor='w')
+        self.my_tree.heading("Department", text="Department", anchor='w')
+        self.my_tree.heading("Date_time", text="Date&Time", anchor='center')
+        self.my_tree.heading("Resort Name", text="Resort Name", anchor='center')
+        self.my_tree.heading("Person Name", text="Person Name", anchor='w')
+        self.my_tree.heading("Amount", text="Amount", anchor='w')
+        self.my_tree.heading("Payment_type", text="Payment Type", anchor='w')
+        self.my_tree.heading("Approved", text="Approved", anchor='w')
+        self.my_tree.heading("Paid", text="Paid", anchor='w')
+
+        self.my_tree["height"] = 34
+        try:
+            for one_collec in collec.find():
+                self.my_tree.insert(parent='', index='end', text="Parent", values=(one_collec["Department"],
+                                                                                            one_collec["Date_time"],
+                                                                                            one_collec["Resort Name"], 
+                                                                                            one_collec["Person Name"],
+                                                                                            one_collec["Amount"],
+                                                                                            one_collec["Payment_type"],
+                                                                                            one_collec["Approved"],
+                                                                                            one_collec["Paid"]))
+        except Exception:
+            CTkMessagebox(title="Error", message=Exception)
+
+
+        self.my_tree.pack(pady=10)
+
+        self.style = ttk.Style()
+            
+        self.style.theme_use("default")
+
+        self.style.configure("Treeview",
+                        background="#2a2d2e",
+                        foreground="white",
+                        rowheight=25,
+                        fieldbackground="#343638",
+                        bordercolor="#343638",
+                        borderwidth=0)
+        self.style.map('Treeview', background=[('selected', '#22559b')])
+
+        self.style.configure("Treeview.Heading",
+                        background="#565b5e",
+                        foreground="white",
+                        relief="flat")
+        self.style.map("Treeview.Heading",
+                    background=[('active', '#3484F0')])
+        
+        self.style.configure("Treeview", height=700)
 
 class MyFrame(customtkinter.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -36,19 +103,22 @@ class MyFrame(customtkinter.CTkFrame):
         self.button_save = customtkinter.CTkButton(self, text="Save", command=self.save_button)
         self.button_save.place(relx=0.3, rely=0.90, anchor='s')
 
-        self.button_logs = customtkinter.CTkButton(self, text="Old Logs")
+        self.button_logs = customtkinter.CTkButton(self, text="Old Logs", command=self.open_logs)
         self.button_logs.place(relx=0.7, rely=0.90, anchor='s')
+
+        self.logs_window = None
 
     def save_button(self):
         dic = {
-            "Department": "",
+            "Department": "Indoor",
+            "Date_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
             "Resort Name": self.entry_name.get(),
             "Person Name": "",
             "Amount": self.entry_amount.get(),
             "Reason": self.textbox_reason.get(1.0, "end-1c"),
             "Payment_type": "",
-            "Approved": 0,
-            "Paid": 0
+            "Approved": "✔",
+            "Paid": "X"
         }
         if self.entry_name.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
             try:
@@ -60,6 +130,22 @@ class MyFrame(customtkinter.CTkFrame):
                 self.textbox_reason.delete('1.0', 'end')
             except Exception:
                 CTkMessagebox(title="Error", message="Please Enter all values properly or try again later")
+
+    def open_logs(self):
+        self.logs_window = customtkinter.CTkToplevel(self)
+        self.logs_window.geometry("1000x750")
+        self.logs_window.focus()
+        self.logs_window.resizable = False
+
+        self.frame = LogFrame(master=self.logs_window, border_color='blue')
+        self.frame.grid(row=0, column=0, padx=20, pady=20, sticky="e")
+
+        self.button_frame = customtkinter.CTkFrame(master=self.logs_window, height=710, width=150, fg_color='green', corner_radius=10)
+        self.button_frame.grid(row=0, column=1)
+        
+        # self.sort_btn = customtkinter.CTkButton(master=self.button_frame, text="Sort", corner_radius=10).pack()
+
+
 
 
 class App(customtkinter.CTk):
