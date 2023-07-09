@@ -48,7 +48,8 @@ class LogFrame(customtkinter.CTkFrame):
                                                                                             one_collec["Amount"],
                                                                                             one_collec["Payment_type"],
                                                                                             one_collec["Approved"],
-                                                                                            one_collec["Paid"]))
+                                                                                            one_collec["Paid"],
+                                                                                            one_collec["Signature"]))
         except Exception:
             CTkMessagebox(title="Error", message=Exception)
 
@@ -85,10 +86,12 @@ class MyFrame(customtkinter.CTkFrame):
         self.label_heading = customtkinter.CTkLabel(self, text="Enter Details", font=('Monospace', 30), width=10, justify='center')
         self.label_heading.place(relx=0.5, rely=0.1, anchor='n')
 
-        self.label_name = customtkinter.CTkLabel(self, text="Resort Name:")
+
+        self.label_name = customtkinter.CTkLabel(self, text="Client Name:")
         self.label_name.place(relx=0.15, rely=.2, anchor='nw')
-        self.entry_name = customtkinter.CTkEntry(self, placeholder_text="Resort Name", width=200)
-        self.entry_name.place(relx=.15, rely=.25, anchor='nw')
+        self.optionmenu = customtkinter.CTkOptionMenu(self, values=["Resort 1", "Resort 2", "Client 1", "Client 2"])
+        self.optionmenu.place(relx=.15, rely=.25, anchor='nw')
+        # self.entry_name = customtkinter.CTkEntry(self, placeholder_text="Client Name", width=200)
 
         self.label_amount = customtkinter.CTkLabel(self, text="Amount (Rs.)")
         self.label_amount.place(relx=0.15, rely=.3, anchor='nw')
@@ -117,8 +120,10 @@ class MyFrame(customtkinter.CTkFrame):
             "Amount": self.entry_amount.get(),
             "Reason": self.textbox_reason.get(1.0, "end-1c"),
             "Payment_type": "",
-            "Approved": "✔",
-            "Paid": "X"
+            "Approved": 1,
+            "Paid": 1,
+            "Signature": 0,
+            "Signature_Image": ""
         }
         if self.entry_name.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
             try:
@@ -135,12 +140,12 @@ class MyFrame(customtkinter.CTkFrame):
         self.logs_window = customtkinter.CTkToplevel(self)
         self.logs_window.geometry("1000x750")
         self.logs_window.focus()
-        self.logs_window.resizable = False
+        self.logs_window.resizable(False, False)
 
         self.frame = LogFrame(master=self.logs_window, border_color='blue')
         self.frame.grid(row=0, column=0, padx=20, pady=20, sticky="e")
 
-        self.button_frame = customtkinter.CTkFrame(master=self.logs_window, height=710, width=150, fg_color='green', corner_radius=10)
+        self.button_frame = customtkinter.CTkFrame(master=self.logs_window, height=710, width=150, corner_radius=10)
         self.button_frame.grid(row=0, column=1)
         
         # self.sort_btn = customtkinter.CTkButton(master=self.button_frame, text="Sort", corner_radius=10).pack()
