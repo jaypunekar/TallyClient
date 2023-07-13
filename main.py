@@ -115,7 +115,7 @@ class MyFrame(customtkinter.CTkFrame):
         dic = {
             "Department": "Indoor",
             "Date_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-            "Client Name": self.entry_name.get(),
+            "Client Name": self.optionmenu.get(),
             "Person Name": "",
             "Amount": self.entry_amount.get(),
             "Reason": self.textbox_reason.get(1.0, "end-1c"),
@@ -126,12 +126,13 @@ class MyFrame(customtkinter.CTkFrame):
             "Signature": 0,
             "Signature_Image": ""
         }
-        if self.entry_name.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
+        if self.optionmenu.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
             try:
+                # Check weather the amount is in integer or not
                 int(self.entry_amount.get())
                 collec.insert_one(dic)
                 CTkMessagebox(title="Info", message="Added to Database Successfully")
-                self.entry_name.delete(0, 'end')
+                self.optionmenu.set('Resort 1')
                 self.entry_amount.delete(0, 'end')
                 self.textbox_reason.delete('1.0', 'end')
             except Exception:
