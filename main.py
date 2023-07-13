@@ -115,13 +115,14 @@ class MyFrame(customtkinter.CTkFrame):
         dic = {
             "Department": "Indoor",
             "Date_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-            "Resort Name": self.entry_name.get(),
+            "Client Name": self.entry_name.get(),
             "Person Name": "",
             "Amount": self.entry_amount.get(),
             "Reason": self.textbox_reason.get(1.0, "end-1c"),
-            "Payment_type": "",
-            "Approved": 1,
-            "Paid": 1,
+            "Payment_from": "",
+            "Payment_to": "",
+            "Approved": 0,
+            "Paid": 0,
             "Signature": 0,
             "Signature_Image": ""
         }
