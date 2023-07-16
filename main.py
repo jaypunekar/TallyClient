@@ -43,10 +43,10 @@ class LogFrame(customtkinter.CTkFrame):
             for one_collec in collec.find():
                 self.my_tree.insert(parent='', index='end', text="Parent", values=(one_collec["Department"],
                                                                                             one_collec["Date_time"],
-                                                                                            one_collec["Resort Name"], 
+                                                                                            one_collec["Client Name"], 
                                                                                             one_collec["Person Name"],
                                                                                             one_collec["Amount"],
-                                                                                            one_collec["Payment_type"],
+                                                                                            one_collec["Payment_to"],
                                                                                             one_collec["Approved"],
                                                                                             one_collec["Paid"],
                                                                                             one_collec["Signature"]))
@@ -111,6 +111,7 @@ class MyFrame(customtkinter.CTkFrame):
 
         self.logs_window = None
 
+    # This the structure for the collection in Mongodb Database
     def save_button(self):
         dic = {
             "Department": "Indoor",
@@ -120,11 +121,12 @@ class MyFrame(customtkinter.CTkFrame):
             "Amount": self.entry_amount.get(),
             "Reason": self.textbox_reason.get(1.0, "end-1c"),
             "Payment_from": "",
-            "Payment_to": "",
-            "Approved": 0,
-            "Paid": 0,
+            "Approved": 1,
+            "Paid": 1,
             "Signature": 0,
-            "Signature_Image": ""
+            "Signature_Image": "",
+            "Added_to_tally": 0
+
         }
         if self.optionmenu.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
             try:
