@@ -1,15 +1,21 @@
+import os
+import sys
 import customtkinter
 from CTkMessagebox import CTkMessagebox
 from pymongo.mongo_client import MongoClient
 from tkinter import ttk
 from datetime import datetime
+from exception import TallyException
 
-url = "mongodb+srv://mongodb:mongodb@tally.i6wfrlt.mongodb.net/?retryWrites=true&w=majority"
+try:
+    url = "mongodb+srv://mongodb:mongodb@tally.i6wfrlt.mongodb.net/?retryWrites=true&w=majority"
 
-client = MongoClient(url)
+    client = MongoClient(url)
 
-db = client['Punekar']
-collec = db['Tally']
+    db = client['Punekar']
+    collec = db['Tally']
+except Exception as e:
+    raise TallyException(e, sys) from e
 
 class LogFrame(customtkinter.CTkFrame):
     def __init__(self, master, **kwargs):
@@ -50,8 +56,9 @@ class LogFrame(customtkinter.CTkFrame):
                                                                                             one_collec["Approved"],
                                                                                             one_collec["Paid"],
                                                                                             one_collec["Signature"]))
-        except Exception:
+        except Exception as e:
             CTkMessagebox(title="Error", message=Exception)
+            raise TallyException(e, sys) from e
 
 
         self.my_tree.pack(pady=10)
@@ -80,93 +87,110 @@ class LogFrame(customtkinter.CTkFrame):
 
 class MyFrame(customtkinter.CTkFrame):
     def __init__(self, master, **kwargs):
-        super().__init__(master, **kwargs)
+        try:
+            super().__init__(master, **kwargs)
 
-        # add widgets onto the frame, for example:
-        self.label_heading = customtkinter.CTkLabel(self, text="Enter Details", font=('Monospace', 30), width=10, justify='center')
-        self.label_heading.place(relx=0.5, rely=0.1, anchor='n')
+            # add widgets onto the frame, for example:
+            self.label_heading = customtkinter.CTkLabel(self, text="Enter Details", font=('Monospace', 30), width=10, justify='center')
+            self.label_heading.place(relx=0.5, rely=0.1, anchor='n')
 
 
-        self.label_name = customtkinter.CTkLabel(self, text="Client Name:")
-        self.label_name.place(relx=0.15, rely=.2, anchor='nw')
-        self.optionmenu = customtkinter.CTkOptionMenu(self, values=["Resort 1", "Resort 2", "Client 1", "Client 2"])
-        self.optionmenu.place(relx=.15, rely=.25, anchor='nw')
-        # self.entry_name = customtkinter.CTkEntry(self, placeholder_text="Client Name", width=200)
+            self.label_name = customtkinter.CTkLabel(self, text="Client Name:")
+            self.label_name.place(relx=0.15, rely=.2, anchor='nw')
+            self.optionmenu = customtkinter.CTkOptionMenu(self, values=["Resort 1", "Resort 2", "Client 1", "Client 2"])
+            self.optionmenu.place(relx=.15, rely=.25, anchor='nw')
+            # self.entry_name = customtkinter.CTkEntry(self, placeholder_text="Client Name", width=200)
 
-        self.label_amount = customtkinter.CTkLabel(self, text="Amount (Rs.)")
-        self.label_amount.place(relx=0.15, rely=.3, anchor='nw')
-        self.entry_amount = customtkinter.CTkEntry(self, placeholder_text="Amount (Rs)", width=140)
-        self.entry_amount.place(relx=.15, rely=.35, anchor='nw')
+            self.label_amount = customtkinter.CTkLabel(self, text="Amount (Rs.)")
+            self.label_amount.place(relx=0.15, rely=.3, anchor='nw')
+            self.entry_amount = customtkinter.CTkEntry(self, placeholder_text="Amount (Rs)", width=140)
+            self.entry_amount.place(relx=.15, rely=.35, anchor='nw')
 
-        self.label_reason = customtkinter.CTkLabel(self, text="Reason:")
-        self.label_reason.place(relx=0.15, rely=.4, anchor='nw')
-        self.textbox_reason = customtkinter.CTkTextbox(master=self, width=400, corner_radius=8)
-        self.textbox_reason.place(relx=.15, rely=.45, anchor='nw')
+            self.label_reason = customtkinter.CTkLabel(self, text="Reason:")
+            self.label_reason.place(relx=0.15, rely=.4, anchor='nw')
+            self.textbox_reason = customtkinter.CTkTextbox(master=self, width=400, corner_radius=8)
+            self.textbox_reason.place(relx=.15, rely=.45, anchor='nw')
 
-        self.button_save = customtkinter.CTkButton(self, text="Save", command=self.save_button)
-        self.button_save.place(relx=0.3, rely=0.90, anchor='s')
+            self.button_save = customtkinter.CTkButton(self, text="Save", command=self.save_button)
+            self.button_save.place(relx=0.3, rely=0.90, anchor='s')
 
-        self.button_logs = customtkinter.CTkButton(self, text="Old Logs", command=self.open_logs)
-        self.button_logs.place(relx=0.7, rely=0.90, anchor='s')
+            self.button_logs = customtkinter.CTkButton(self, text="Old Logs", command=self.open_logs)
+            self.button_logs.place(relx=0.7, rely=0.90, anchor='s')
 
-        self.logs_window = None
+            self.logs_window = None
+        except Exception as e:
+            raise TallyException(e, sys) from e
 
     # This the structure for the collection in Mongodb Database
     def save_button(self):
-        dic = {
-            "Department": "Indoor",
-            "Date_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-            "Client Name": self.optionmenu.get(),
-            "Person Name": "",
-            "Amount": self.entry_amount.get(),
-            "Reason": self.textbox_reason.get(1.0, "end-1c"),
-            "Payment_from": "",
-            "Approved": 1,
-            "Paid": 1,
-            "Signature": 0,
-            "Signature_Image": "",
-            "Added_to_tally": 0
+        try:
+            dic = {
+                "Department": "Indoor",
+                "Date_time": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                "Client Name": self.optionmenu.get(),
+                "Person Name": "",
+                "Amount": self.entry_amount.get(),
+                "Reason": self.textbox_reason.get(1.0, "end-1c"),
+                "Payment_from": "",
+                "Approved": 1,
+                "Paid": 1,
+                "Signature": 0,
+                "Signature_Image": "",
+                "Added_to_tally": 0
 
-        }
-        if self.optionmenu.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
-            try:
-                # Check weather the amount is in integer or not
-                int(self.entry_amount.get())
-                collec.insert_one(dic)
-                CTkMessagebox(title="Info", message="Added to Database Successfully")
-                self.optionmenu.set('Resort 1')
-                self.entry_amount.delete(0, 'end')
-                self.textbox_reason.delete('1.0', 'end')
-            except Exception:
-                CTkMessagebox(title="Error", message="Please Enter all values properly or try again later")
+            }
+            if self.optionmenu.get() and self.entry_amount.get() and self.textbox_reason.get("1.0",'end-1c'):
+                try:
+                    # Check weather the amount is in integer or not
+                    int(self.entry_amount.get())
+                    collec.insert_one(dic)
+                    CTkMessagebox(title="Info", message="Added to Database Successfully")
+                    self.optionmenu.set('Resort 1')
+                    self.entry_amount.delete(0, 'end')
+                    self.textbox_reason.delete('1.0', 'end')
+                except Exception:
+                    CTkMessagebox(title="Error", message="Please Enter all values properly or try again later")
+                    raise TallyException(e, sys) from e
+        except Exception as e:
+            raise TallyException(e, sys) from e
+
 
     def open_logs(self):
-        self.logs_window = customtkinter.CTkToplevel(self)
-        self.logs_window.geometry("1000x750")
-        self.logs_window.focus()
-        self.logs_window.resizable(False, False)
+        try:
+            self.logs_window = customtkinter.CTkToplevel(self)
+            self.logs_window.geometry("1000x750")
+            self.logs_window.focus()
+            self.logs_window.resizable(False, False)
+            self.logs_window.title("Logs Window")
 
-        self.frame = LogFrame(master=self.logs_window, border_color='blue')
-        self.frame.grid(row=0, column=0, padx=20, pady=20, sticky="e")
+            self.frame = LogFrame(master=self.logs_window, border_color='blue')
+            self.frame.grid(row=0, column=0, padx=20, pady=20, sticky="e")
 
-        self.button_frame = customtkinter.CTkFrame(master=self.logs_window, height=710, width=150, corner_radius=10)
-        self.button_frame.grid(row=0, column=1)
-        
-        # self.sort_btn = customtkinter.CTkButton(master=self.button_frame, text="Sort", corner_radius=10).pack()
+            self.button_frame = customtkinter.CTkFrame(master=self.logs_window, height=710, width=150, corner_radius=10)
+            self.button_frame.grid(row=0, column=1)
+            
+            # self.sort_btn = customtkinter.CTkButton(master=self.button_frame, text="Sort", corner_radius=10).pack()
+        except Exception as e:
+            raise TallyException(e, sys) from e
+
 
 
 
 
 class App(customtkinter.CTk):
     def __init__(self):
-        super().__init__()
-        self.geometry("600x600")
-        self.grid_rowconfigure(0, weight=1)  # configure grid system
-        self.grid_columnconfigure(0, weight=1)
-        self.resizable(False, False)
+        try:
+            super().__init__()
+            self.geometry("600x600")
+            self.grid_rowconfigure(0, weight=1)  # configure grid system
+            self.grid_columnconfigure(0, weight=1)
+            self.resizable(False, False)
+            self.title("TallyClient")
 
-        self.my_frame = MyFrame(master=self)
-        self.my_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+            self.my_frame = MyFrame(master=self)
+            self.my_frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+        except Exception as e:
+            raise TallyException(e, sys) from e
 
 
 app = App()
