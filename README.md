@@ -19,6 +19,7 @@ TallyClient is a pivotal component of the Voucher Automation Software Suite, cra
 - [TallyClient Setup](#tallyclient-setup)
 - [Installation](#installation)
 - [Packaging](#packaging-the-application)
+- [Screenshots](#screenshots)
 
 
 ## Overview
@@ -125,3 +126,8 @@ If you want to add an icon run (icon.ico should be in TallyClient dir):
 pyinstaller --name TallyClient --onefile --windowed --icon=icon.ico --main.py
 ```
 #### You will see a "dist" folder in TallyClient directory. Inside the "dist" folder you will get the executable file.
+
+## Screenshots
+[![img12.png](https://i.postimg.cc/8CPjbvZW/img12.png)](https://postimg.cc/qNSJJNVM)
+
+[![img22.png](https://i.postimg.cc/Ss9qLNbC/img22.png)](https://postimg.cc/k67kqC4g)
