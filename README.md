@@ -5,6 +5,8 @@
 
 TallyClient is a pivotal component of the Voucher Automation Software Suite, crafted using Python and incorporating Tkinter and CustomTkinter. This user-friendly desktop application serves as the front-end interface for users, facilitating the creation of various vouchers and centralizing their storage in MongoDB Atlas, a robust NoSQL database.
 
+*NOTE: You have to be connnected to the internet for this application to work
+
 
 
 ### Softwares:
