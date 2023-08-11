@@ -82,7 +82,7 @@ Go to the project directory
   cd TallyClient
 ```
 
-Create conda virtual enviornment (This step in not necessory):
+Create conda virtual enviornment (This step in not necessory. Anaconda should be installed for this step to work):
 ```bash
 conda create -p venv python==3.8 -y
 ```
